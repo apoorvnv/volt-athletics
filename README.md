@@ -80,6 +80,20 @@ Open the URL displayed in your terminal, usually:
 http://localhost:5173
 ```
 
+## 📬 Live Email Inquiry Setup
+
+The contact inquiry form is pre-configured with **Web3Forms** for instant email forwarding and auto-responder delivery with zero backend maintenance:
+
+1. Obtain a free Access Key at [web3forms.com](https://web3forms.com) (enter your receiving email `apoorvtest0111@gmail.com`).
+2. Add your key to your `.env` file locally or in **Vercel Project Settings > Environment Variables**:
+   ```env
+   VITE_WEB3FORMS_ACCESS_KEY="your-access-key-here"
+   VITE_GYM_OWNER_EMAIL="apoorvtest0111@gmail.com"
+   ```
+3. Alternatively, click the **"Email Settings"** key icon directly on the website footer to save your key in the browser.
+
+*When an inquiry is submitted, the gym owner receives the complete athlete payload, and the applicant receives their confirmation ticket.*
+
 ## 📦 Build for Production
 
 To create an optimized production build, run:
