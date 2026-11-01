@@ -2,10 +2,10 @@ import React from 'react';
 
 export const StatsStrip: React.FC = () => {
   const stats = [
-    { value: '2,500+', label: 'Active Members', note: 'Engaged community across all disciplines' },
-    { value: '25+', label: 'Expert Trainers', note: 'CSCS, USAW, & FMS certified coaches' },
-    { value: '40+', label: 'Weekly Classes', note: 'Strength, HIIT, mobility & athletic conditioning' },
-    { value: '98%', label: 'Member Satisfaction', note: 'Based on quarterly internal athlete feedback' },
+    { value: '2,500', suffix: '+', label: 'Active Members', note: 'Engaged community across all disciplines' },
+    { value: '25', suffix: '+', label: 'Expert Trainers', note: 'CSCS, USAW, & FMS certified coaches' },
+    { value: '40', suffix: '+', label: 'Weekly Classes', note: 'Strength, HIIT, mobility & athletic conditioning' },
+    { value: '98', suffix: '%', label: 'Member Satisfaction', note: 'Based on quarterly internal athlete feedback' },
   ];
 
   return (
@@ -21,8 +21,8 @@ export const StatsStrip: React.FC = () => {
             >
               <div>
                 <span className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#F5F5F0] tracking-tight tabular-nums block">
-                  {stat.value.replace('+', '')}
-                  <span className="text-[#C6FF3D]">{stat.value.includes('+') ? '+' : '%'}</span>
+                  {stat.value}
+                  <span className="text-[#C6FF3D]">{stat.suffix}</span>
                 </span>
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-white mt-1">
                   {stat.label}
