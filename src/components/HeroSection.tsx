@@ -89,11 +89,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenTrial }) => {
       <a
         href="#stats"
         aria-label="Scroll to gym statistics"
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-xs uppercase tracking-widest text-[#A5AAA3] hover:text-[#C6FF3D] transition-colors"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 hidden xl:flex flex-col items-center gap-1 text-xs uppercase tracking-widest text-[#A5AAA3] hover:text-[#C6FF3D] transition-colors"
       >
-        <span className="text-[10px] font-medium tracking-widest">SCROLL</span>
-        <div className="w-5 h-9 rounded-full border border-[#232723] flex items-start justify-center p-1">
-          <div className="w-1 h-2 rounded-full bg-[#C6FF3D] animate-bounce" />
+        <span className="text-[9px] font-medium tracking-widest">SCROLL</span>
+        <div className="w-4 h-7 rounded-full border border-[#232723] flex items-start justify-center p-0.5">
+          <div className="w-1 h-1.5 rounded-full bg-[#C6FF3D] animate-bounce" />
         </div>
       </a>
     </section>
