@@ -1,0 +1,6 @@
+{
+  "name": "VOLT ATHLETICS",
+  "description": "Premium strength training, personal coaching, HIIT, and elite fitness club website with high-performance dark aesthetic and electric lime branding.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

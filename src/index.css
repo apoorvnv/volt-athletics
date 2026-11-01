@@ -1,0 +1,48 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Oswald", "Barlow Condensed", sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --color-brand-black: #0B0D0C;
+  --color-brand-charcoal: #171A17;
+  --color-brand-card: #131614;
+  --color-brand-card-hover: #1A1F1B;
+  --color-brand-lime: #C6FF3D;
+  --color-brand-lime-hover: #B5F527;
+  --color-brand-white: #F5F5F0;
+  --color-brand-muted: #A5AAA3;
+  --color-brand-border: #232723;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0B0D0C;
+  color: #F5F5F0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display font class */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0D0C;
+}
+::-webkit-scrollbar-thumb {
+  background: #232723;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #363D36;
+}
