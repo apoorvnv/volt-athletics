@@ -19,7 +19,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           <div className="lg:col-span-6 relative">
             <div className="relative rounded-2xl overflow-hidden border border-[#232723] group">
               <img
-                src="/src/assets/images/about_gym_facility_1793566985788.jpg"
+                src="/images/about_gym_facility_1793566985788.jpg"
                 alt="Volt Athletics high performance strength floor and turf track"
                 className="w-full h-[420px] sm:h-[500px] object-cover group-hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"

@@ -83,7 +83,7 @@ export const PROGRAMS: Program[] = [
     difficulty: 'Intermediate',
     duration: '60–75 mins',
     caloriesBurn: '550–700 kcal',
-    image: '/src/assets/images/program_strength_conditioning_1793566986888.jpg',
+    image: '/images/program_strength_conditioning_1793566986888.jpg',
     focus: ['Barbell Mastery', 'Neuromuscular Efficiency', 'Explosive Power', 'Core Bracing'],
     weeklyPlan: [
       'Day 1: Heavy Lower Body (Squat focus + posterior chain)',
@@ -104,7 +104,7 @@ export const PROGRAMS: Program[] = [
     difficulty: 'All Levels',
     duration: '60 mins',
     caloriesBurn: '450–650 kcal',
-    image: '/src/assets/images/about_gym_facility_1793566985788.jpg',
+    image: '/images/about_gym_facility_1793566985788.jpg',
     focus: ['Individual Assessment', 'Form Optimization', 'Targeted Progression', 'Lifestyle Integration'],
     weeklyPlan: [
       'Comprehensive Movement & Mobility Screening',
@@ -124,7 +124,7 @@ export const PROGRAMS: Program[] = [
     difficulty: 'High Intensity',
     duration: '45–50 mins',
     caloriesBurn: '600–850 kcal',
-    image: '/src/assets/images/program_hiit_functional_1793566988097.jpg',
+    image: '/images/program_hiit_functional_1793566988097.jpg',
     focus: ['Metabolic Conditioning', 'Anaerobic Threshold', 'Functional Agility', 'Grit & Stamina'],
     weeklyPlan: [
       'Interval Tabata Power Circuits',
@@ -144,7 +144,7 @@ export const PROGRAMS: Program[] = [
     difficulty: 'Intermediate',
     duration: '60 mins',
     caloriesBurn: '400–600 kcal',
-    image: '/src/assets/images/gallery_calibrated_plates_1793567043163.jpg',
+    image: '/images/gallery_calibrated_plates_1793567043163.jpg',
     focus: ['Hypertrophy Science', 'Mind-Muscle Connection', 'Isolation & Cables', 'Structural Balance'],
     weeklyPlan: [
       'Push Focus: Chest, Anterior Delts, Triceps',
@@ -164,7 +164,7 @@ export const PROGRAMS: Program[] = [
     difficulty: 'All Levels',
     duration: '50 mins',
     caloriesBurn: '500–750 kcal',
-    image: '/src/assets/images/gallery_sled_push_1793567044128.jpg',
+    image: '/images/gallery_sled_push_1793567044128.jpg',
     focus: ['Metabolic Rate Elevation', 'Lean Mass Preservation', 'Nutritional Calibration', 'Habit Stacking'],
     weeklyPlan: [
       'Compound Resistance Circuit',
@@ -184,7 +184,7 @@ export const PROGRAMS: Program[] = [
     difficulty: 'All Levels',
     duration: '45 mins',
     caloriesBurn: '200–300 kcal',
-    image: '/src/assets/images/program_mobility_recovery_1793566986630.jpg',
+    image: '/images/program_mobility_recovery_1793566986630.jpg',
     focus: ['Joint Longevity', 'Soft Tissue Release', 'CNS Downregulation', 'Postural Restoration'],
     weeklyPlan: [
       'Hip Capsule Opening & Glute Activation',
@@ -204,7 +204,7 @@ export const TRAINERS: Trainer[] = [
     specialty: 'Powerlifting, Barbell Mechanics & Periodization',
     bio: 'Former collegiate strength coach with 12+ years optimizing maximal force production. Marcus brings an unapologetic focus on technical precision and heavy compound lifts.',
     certifications: ['CSCS (NSCA)', 'USAW Level 2 Senior Coach', 'FMS Level 2 Certified'],
-    image: '/src/assets/images/trainer_head_coach_1793567042260.jpg',
+    image: '/images/trainer_head_coach_1793567042260.jpg',
     experienceYears: 12,
     socials: {
       instagram: 'https://instagram.com',
@@ -218,7 +218,7 @@ export const TRAINERS: Trainer[] = [
     specialty: 'Kinetic Movement, Injury Prevention & Posture',
     bio: 'Combining athletic gymnastics discipline with sports physiotherapy, Elena specializes in eliminating joint restrictions, improving movement fluidity, and bulletproofing joints.',
     certifications: ['Doctorate of Physical Therapy (Candidate)', 'FRC Mobility Specialist', 'CPT Master Trainer'],
-    image: '/src/assets/images/trainer_female_coach_1793567042357.jpg',
+    image: '/images/trainer_female_coach_1793567042357.jpg',
     experienceYears: 9,
     socials: {
       instagram: 'https://instagram.com',
@@ -232,7 +232,7 @@ export const TRAINERS: Trainer[] = [
     specialty: 'Metabolic Conditioning, Hyrox & Sprint Mechanics',
     bio: 'Ex-decathlete known for infectious energy and relentless work ethic. Damon structures functional conditioning protocols that test mental fortitude and anaerobic power.',
     certifications: ['EXOS Performance Specialist', 'NASM-PES', 'CrossFit Level 2 Trainer'],
-    image: '/src/assets/images/program_hiit_functional_1793566988097.jpg',
+    image: '/images/program_hiit_functional_1793566988097.jpg',
     experienceYears: 8,
     socials: {
       instagram: 'https://instagram.com',
@@ -246,7 +246,7 @@ export const TRAINERS: Trainer[] = [
     specialty: 'Macro Periodization, Hypertrophy & Metabolism',
     bio: 'Sports nutritionist helping athletes and professionals strip body fat without crashing energy. Priya balances empirical science with realistic lifestyle habits.',
     certifications: ['MSc Sports Science & Nutrition', 'CISSN Sports Nutritionist', 'Precision Nutrition Level 2'],
-    image: '/src/assets/images/hero_gym_athlete_1793566985505.jpg',
+    image: '/images/hero_gym_athlete_1793566985505.jpg',
     experienceYears: 10,
     socials: {
       instagram: 'https://instagram.com',
@@ -361,7 +361,7 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       'I spent five years getting stuck at standard commercial gyms. The level of coaching, calibrated equipment, and raw discipline at VOLT transformed my mechanics within 90 days. It is not an ordinary gym; it is an athletic sanctuary.',
     rating: 5,
-    avatar: '/src/assets/images/trainer_head_coach_1793567042260.jpg',
+    avatar: '/images/trainer_head_coach_1793567042260.jpg',
   },
   {
     id: 'test-2',
@@ -372,7 +372,7 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       'Balancing high-mileage road running with heavy compound lifts was always tricky until Coach Elena and Marcus structured my split. My joint resilience is through the roof and I achieved a PR without burnout.',
     rating: 5,
-    avatar: '/src/assets/images/trainer_female_coach_1793567042357.jpg',
+    avatar: '/images/trainer_female_coach_1793567042357.jpg',
   },
   {
     id: 'test-3',
@@ -383,7 +383,7 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       'As a surgeon, I am hyper-critical of biomechanics and safety. VOLT’s coaching methodology is strictly grounded in evidence-based exercise physiology. The culture here demands consistency without reckless ego.',
     rating: 5,
-    avatar: '/src/assets/images/hero_gym_athlete_1793566985505.jpg',
+    avatar: '/images/hero_gym_athlete_1793566985505.jpg',
   },
 ];
 
@@ -392,42 +392,42 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: 'gal-1',
     title: 'Olympic Calibrated Steel & Racks',
     category: 'Heavy Iron',
-    image: '/src/assets/images/gallery_calibrated_plates_1793567043163.jpg',
+    image: '/images/gallery_calibrated_plates_1793567043163.jpg',
     aspect: 'landscape',
   },
   {
     id: 'gal-2',
     title: 'High-Tension Heavy Deadlift Arena',
     category: 'Heavy Iron',
-    image: '/src/assets/images/program_strength_conditioning_1793566986888.jpg',
+    image: '/images/program_strength_conditioning_1793566986888.jpg',
     aspect: 'portrait',
   },
   {
     id: 'gal-3',
     title: 'Architectural Strength Training Facility',
     category: 'Facilities',
-    image: '/src/assets/images/about_gym_facility_1793566985788.jpg',
+    image: '/images/about_gym_facility_1793566985788.jpg',
     aspect: 'landscape',
   },
   {
     id: 'gal-4',
     title: 'Explosive Heavy Sled Turf Drive',
     category: 'Conditioning',
-    image: '/src/assets/images/gallery_sled_push_1793567044128.jpg',
+    image: '/images/gallery_sled_push_1793567044128.jpg',
     aspect: 'landscape',
   },
   {
     id: 'gal-5',
     title: 'Battle Ropes & High Heart-Rate Drills',
     category: 'Conditioning',
-    image: '/src/assets/images/program_hiit_functional_1793566988097.jpg',
+    image: '/images/program_hiit_functional_1793566988097.jpg',
     aspect: 'landscape',
   },
   {
     id: 'gal-6',
     title: 'Active Mobility & Kinetic Elasticity',
     category: 'Facilities',
-    image: '/src/assets/images/program_mobility_recovery_1793566986630.jpg',
+    image: '/images/program_mobility_recovery_1793566986630.jpg',
     aspect: 'portrait',
   },
 ];

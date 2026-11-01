@@ -14,7 +14,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenTrial }) => {
       {/* Background Image Container with Measured Scrim */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/src/assets/images/hero_gym_athlete_1793566985505.jpg"
+          src="/images/hero_gym_athlete_1793566985505.jpg"
           alt="Athlete performing heavy barbell strength lift at Volt Athletics"
           className="w-full h-full object-cover object-center opacity-45 scale-105 transform duration-1000 ease-out"
           referrerPolicy="no-referrer"

@@ -33,7 +33,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onOpenTrial }) => {
       {/* Background with dramatic dark athletic photography */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/src/assets/images/hero_gym_athlete_1793566985505.jpg"
+          src="/images/hero_gym_athlete_1793566985505.jpg"
           alt="Athletic training backdrop"
           className="w-full h-full object-cover opacity-25 scale-105"
           referrerPolicy="no-referrer"
