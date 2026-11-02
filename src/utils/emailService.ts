@@ -8,105 +8,71 @@ export interface InquiryPayload {
   inquiryId: string;
 }
 
-export interface InquiryResult {
-  success: boolean;
-  mode: 'api' | 'direct' | 'simulation';
-  message: string;
-  inquiryId: string;
-}
+export const GYM_OWNER_EMAIL = 'apoorvtest0111@gmail.com';
 
-export const GYM_OWNER_EMAIL =
-  import.meta.env.VITE_GYM_OWNER_EMAIL || 'apoorvtest0111@gmail.com';
+/**
+ * Generates the clean formatted plain text content of the inquiry
+ */
+export const getFormattedEmailText = (payload: InquiryPayload): string => {
+  return `To: ${GYM_OWNER_EMAIL}
+From: ${payload.name} <${payload.email}>
+Subject: ⚡ Inbound Athlete Inquiry: ${payload.name} [${payload.program}] - Ref #${payload.inquiryId}
 
-export const sendInquiryEmail = async (
-  payload: InquiryPayload
-): Promise<InquiryResult> => {
-  const accessKey =
-    import.meta.env.VITE_WEB3FORMS_ACCESS_KEY ||
-    (typeof window !== 'undefined'
-      ? localStorage.getItem('volt_web3forms_key')
-      : null);
+Hello VOLT ATHLETICS Coaching Team,
 
-  // If a Web3Forms access key is configured, call the live API
-  if (accessKey && accessKey.trim() !== '' && accessKey !== 'YOUR_WEB3FORMS_ACCESS_KEY') {
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          access_key: accessKey.trim(),
-          subject: `⚡ New Athlete Inquiry: ${payload.name} [${payload.program}] - Ref #${payload.inquiryId}`,
-          from_name: 'VOLT ATHLETICS Concierge',
-          to_email: GYM_OWNER_EMAIL,
-          name: payload.name,
-          email: payload.email,
-          phone: payload.phone || 'Not provided',
-          program: payload.program,
-          preferred_callback_time: payload.preferredTime,
-          message: payload.message,
-          inquiry_reference: payload.inquiryId,
-          replyto: payload.email,
-        }),
-      });
-
-      const data = await response.json();
-      if (response.ok && data.success) {
-        return {
-          success: true,
-          mode: 'api',
-          message: 'Inquiry dispatched to gym concierge and confirmation queued.',
-          inquiryId: payload.inquiryId,
-        };
-      }
-    } catch (err) {
-      console.warn('Web3Forms dispatch error, falling back to local receipt:', err);
-    }
-  }
-
-  // Graceful simulated delivery (with ready-to-dispatch mailto fallback)
-  await new Promise((resolve) => setTimeout(resolve, 600));
-
-  return {
-    success: true,
-    mode: accessKey ? 'simulation' : 'direct',
-    message: 'Inquiry registered. Notification receipt generated for gym and athlete.',
-    inquiryId: payload.inquiryId,
-  };
-};
-
-export const createMailtoLink = (payload: InquiryPayload): string => {
-  const subject = encodeURIComponent(
-    `⚡ Inbound Athlete Inquiry: ${payload.name} (${payload.program}) - Ref #${payload.inquiryId}`
-  );
-  const body = encodeURIComponent(
-    `Hello VOLT ATHLETICS Team,
-
-I submitted an inquiry through the website with the following details:
+I am submitting an inquiry through the VOLT ATHLETICS website with the following details:
 
 - Full Name: ${payload.name}
 - Email: ${payload.email}
-- Phone: ${payload.phone || 'N/A'}
-- Program of Interest: ${payload.program}
-- Preferred Time: ${payload.preferredTime}
-- Inquiry Reference ID: #${payload.inquiryId}
+- Phone: ${payload.phone || 'Not provided'}
+- Selected Discipline: ${payload.program}
+- Preferred Callback Window: ${payload.preferredTime}
+- Reference ID: #${payload.inquiryId}
 
-Message / Goals:
+Inquiry Message & Fitness Goals:
 ${payload.message}
 
-Please confirm receipt and send me the preparation guide.
+Please confirm receipt and send me the onboarding guide and schedule.
 
 Best regards,
-${payload.name}`
-  );
-
-  return `mailto:${GYM_OWNER_EMAIL}?subject=${subject}&body=${body}&cc=${encodeURIComponent(
-    payload.email
-  )}`;
+${payload.name}
+${payload.phone ? `Phone: ${payload.phone}` : ''}`;
 };
 
+/**
+ * Builds the native mailto: URL pre-addressed to the gym owner with CC to the applicant
+ */
+export const createMailtoLink = (payload: InquiryPayload): string => {
+  const subject = `⚡ Inbound Athlete Inquiry: ${payload.name} [${payload.program}] - Ref #${payload.inquiryId}`;
+
+  const body = `Hello VOLT ATHLETICS Team,
+
+I am submitting an inquiry through the website with the following details:
+
+- Full Name: ${payload.name}
+- Email: ${payload.email}
+- Phone: ${payload.phone || 'Not provided'}
+- Discipline Interest: ${payload.program}
+- Preferred Callback Window: ${payload.preferredTime}
+- Reference ID: #${payload.inquiryId}
+
+Inquiry Message & Goals:
+${payload.message}
+
+Please confirm receipt and let me know about schedule availability.
+
+Best regards,
+${payload.name}
+(${payload.email})`;
+
+  return `mailto:${GYM_OWNER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+    body
+  )}&cc=${encodeURIComponent(payload.email)}`;
+};
+
+/**
+ * Triggers native download of an inquiry confirmation receipt
+ */
 export const downloadInquiryReceipt = (payload: InquiryPayload) => {
   const content = `================================================
 VOLT ATHLETICS - OFFICIAL INQUIRY RECEIPT
@@ -126,18 +92,18 @@ Discipline Interest: ${payload.program}
 Preferred Callback Window: ${payload.preferredTime}
 
 ------------------------------------------------
-INQUIRY MESSAGE:
+INQUIRY MESSAGE & GOALS:
 ------------------------------------------------
 ${payload.message}
 
 ------------------------------------------------
 STATUS & SLA:
 ------------------------------------------------
-Status: DISPATCHED & LOGGED
+Status: PREPARED FOR DISPATCH
+Destination Recipient: ${GYM_OWNER_EMAIL}
 Expected Response Time: Within 4 business hours.
-Location: 840 Power Boulevard, District 4
-Support Hotline: +1 (800) 555-8658
-Email: ${GYM_OWNER_EMAIL}
+Facility: 840 Power Boulevard, District 4
+Support Phone: +1 (800) 555-8658
 ================================================`;
 
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });

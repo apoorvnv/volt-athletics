@@ -80,19 +80,16 @@ Open the URL displayed in your terminal, usually:
 http://localhost:5173
 ```
 
-## 📬 Live Email Inquiry Setup
+## 📬 Native Email Inquiry Dispatch
 
-The contact inquiry form is pre-configured with **Web3Forms** for instant email forwarding and auto-responder delivery with zero backend maintenance:
+The contact inquiry form operates completely client-side using the native `mailto:` protocol:
 
-1. Obtain a free Access Key at [web3forms.com](https://web3forms.com) (enter your receiving email `apoorvtest0111@gmail.com`).
-2. Add your key to your `.env` file locally or in **Vercel Project Settings > Environment Variables**:
-   ```env
-   VITE_WEB3FORMS_ACCESS_KEY="your-access-key-here"
-   VITE_GYM_OWNER_EMAIL="apoorvtest0111@gmail.com"
-   ```
-3. Alternatively, click the **"Email Settings"** key icon directly on the website footer to save your key in the browser.
-
-*When an inquiry is submitted, the gym owner receives the complete athlete payload, and the applicant receives their confirmation ticket.*
+- **Destination:** `apoorvtest0111@gmail.com`
+- **Zero Third-Party APIs:** No external SaaS accounts, no API keys, and no rate limits.
+- **Workflow:** When an athlete submits their inquiry:
+  1. The browser launches the user's native email client (Gmail, Outlook, Apple Mail) with the subject and all athlete metrics (Name, Phone, Program, Callback Window, Message, and Reference ID) pre-filled.
+  2. The gym owner address (`apoorvtest0111@gmail.com`) is placed in `To:`, and the athlete is placed in `CC:` so both parties retain the full conversation thread.
+  3. The website provides instant on-screen confirmation, a **"Re-open Email App"** shortcut, a **"Copy Message Text"** button (for browser webmail users), and a downloadable `.txt` receipt.
 
 ## 📦 Build for Production
 

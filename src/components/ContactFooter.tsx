@@ -13,15 +13,13 @@ import {
   Send,
   ExternalLink,
   Download,
-  Key,
-  ShieldCheck,
-  AlertCircle,
-  Loader2,
-  Inbox,
+  Copy,
+  Check,
+  RotateCcw,
 } from 'lucide-react';
 import {
-  sendInquiryEmail,
   createMailtoLink,
+  getFormattedEmailText,
   downloadInquiryReceipt,
   GYM_OWNER_EMAIL,
   InquiryPayload,
@@ -41,16 +39,9 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
   const [contactMessage, setContactMessage] = useState('');
 
   // Status & Validation
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedPayload, setSubmittedPayload] = useState<InquiryPayload | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  // Web3Forms Key Config Modal
-  const [isKeyModalOpen, setIsKeyModalOpen] = useState(false);
-  const [customKey, setCustomKey] = useState(
-    () => localStorage.getItem('volt_web3forms_key') || ''
-  );
-  const [keySaved, setKeySaved] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Newsletter State
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -67,17 +58,16 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
       errs.email = 'Please provide a valid email address.';
     }
     if (!contactMessage.trim()) {
-      errs.message = 'Please specify your goals or inquiry question.';
+      errs.message = 'Please specify your fitness goals or questions.';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const handleContactSubmit = async (e: React.FormEvent) => {
+  const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
-    setIsSubmitting(true);
     const inquiryId = Math.floor(100000 + Math.random() * 900000).toString();
 
     const payload: InquiryPayload = {
@@ -90,20 +80,24 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
       inquiryId,
     };
 
-    await sendInquiryEmail(payload);
-
-    setIsSubmitting(false);
     setSubmittedPayload(payload);
+
+    // Launch native mailto: protocol
+    const mailtoUrl = createMailtoLink(payload);
+    window.location.href = mailtoUrl;
   };
 
-  const handleSaveKey = (e: React.FormEvent) => {
-    e.preventDefault();
-    localStorage.setItem('volt_web3forms_key', customKey.trim());
-    setKeySaved(true);
-    setTimeout(() => {
-      setKeySaved(false);
-      setIsKeyModalOpen(false);
-    }, 1200);
+  const handleCopyText = async () => {
+    if (!submittedPayload) return;
+    try {
+      await navigator.clipboard.writeText(getFormattedEmailText(submittedPayload));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const handleResetForm = () => {
@@ -113,6 +107,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
     setContactPhone('');
     setContactMessage('');
     setErrors({});
+    setCopied(false);
   };
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -129,7 +124,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
     <>
       <footer id="contact" className="bg-[#0B0D0C] border-t border-[#232723] pt-20 pb-12 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Top Section: Contact Info + Working Inbound Inquiry Form */}
+          {/* Top Section: Contact Info + Native Mailto Inbound Inquiry Form */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-[#232723]">
             {/* Left 6 cols: Location, Details, Opening Hours */}
             <div className="lg:col-span-6 space-y-8">
@@ -188,7 +183,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
                     <span>Direct Concierge</span>
                   </div>
                   <p className="text-white font-mono font-medium truncate">{GYM_OWNER_EMAIL}</p>
-                  <p className="text-[#A5AAA3]">Direct Gym Owner Routing</p>
+                  <p className="text-[#A5AAA3]">Direct Mailbox Routing</p>
                 </div>
               </div>
 
@@ -210,118 +205,115 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
               </div>
             </div>
 
-            {/* Right 6 cols: Inbound Contact & Inquiry Form */}
+            {/* Right 6 cols: Native Mailto Inbound Inquiry Form */}
             <div className="lg:col-span-6 bg-[#131614] p-6 sm:p-8 rounded-2xl border border-[#232723] relative">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs uppercase tracking-widest text-[#C6FF3D] font-bold block">
-                  GET IN TOUCH
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsKeyModalOpen(true)}
-                  title="Configure Email Access Key (Web3Forms)"
-                  className="text-[11px] text-[#A5AAA3] hover:text-[#C6FF3D] flex items-center gap-1 px-2 py-1 rounded bg-[#0B0D0C] border border-[#232723] transition-colors"
-                >
-                  <Key className="w-3 h-3 text-[#C6FF3D]" />
-                  <span>Email Settings</span>
-                </button>
-              </div>
-
+              <span className="text-xs uppercase tracking-widest text-[#C6FF3D] font-bold block mb-1">
+                GET IN TOUCH
+              </span>
               <h3 className="text-2xl font-display font-bold uppercase text-white mb-2">
                 Questions? Send A Direct Message
               </h3>
               <p className="text-xs text-[#A5AAA3] mb-6">
-                Direct inquiry routing to coaching concierge. All questions receive a personal response within 4 business hours.
+                Fill out the details below. When you submit, your email app will automatically open addressed directly to <span className="text-white font-medium">{GYM_OWNER_EMAIL}</span>.
               </p>
 
               {submittedPayload ? (
-                <div className="p-6 rounded-xl bg-[#0B0D0C] border border-[#232723] space-y-4">
+                <div className="p-6 rounded-xl bg-[#0B0D0C] border border-[#232723] space-y-5 animate-fade-in">
                   <div className="w-14 h-14 mx-auto rounded-full bg-[#C6FF3D]/20 border border-[#C6FF3D] text-[#C6FF3D] flex items-center justify-center">
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
 
                   <div className="text-center">
                     <span className="text-[10px] uppercase font-mono font-bold text-[#C6FF3D] tracking-widest">
-                      INQUIRY LOGGED · REF #{submittedPayload.inquiryId}
+                      EMAIL DISPATCH PREPARED · REF #{submittedPayload.inquiryId}
                     </span>
                     <h4 className="text-xl font-display uppercase font-bold text-white mt-1">
-                      Inquiry Dispatched Successfully
+                      Email Client Launched
                     </h4>
                     <p className="text-xs text-[#A5AAA3] max-w-md mx-auto mt-1.5 leading-relaxed">
-                      Thank you, <span className="text-white font-semibold">{submittedPayload.name}</span>. Your inquiry has been routed to the coaching team at <span className="text-white">{GYM_OWNER_EMAIL}</span>.
+                      Your default mail client has opened pre-addressed to <span className="text-white font-medium">{GYM_OWNER_EMAIL}</span> with CC to <span className="text-white font-medium">{submittedPayload.email}</span>.
                     </p>
                   </div>
 
-                  {/* Dual Notification Status Card */}
-                  <div className="p-3.5 rounded-lg bg-[#171A17] border border-[#232723] space-y-2.5 text-xs">
-                    <div className="flex items-start gap-2">
-                      <Inbox className="w-4 h-4 text-[#C6FF3D] shrink-0 mt-0.5" />
-                      <div>
-                        <span className="text-white font-medium block">1. Gym Concierge Notification</span>
-                        <span className="text-[#A5AAA3] text-[11px]">
-                          Complete applicant details dispatched to {GYM_OWNER_EMAIL}.
-                        </span>
-                      </div>
+                  {/* Instructions Callout */}
+                  <div className="p-4 rounded-xl bg-[#171A17] border border-[#232723] text-xs space-y-2">
+                    <div className="flex items-center gap-2 text-[#C6FF3D] font-semibold">
+                      <Mail className="w-4 h-4" />
+                      <span>Next Step: Hit "Send" in Your Email App</span>
                     </div>
-
-                    <div className="flex items-start gap-2 pt-2 border-t border-[#232723]">
-                      <Mail className="w-4 h-4 text-[#C6FF3D] shrink-0 mt-0.5" />
-                      <div>
-                        <span className="text-white font-medium block">2. Athlete Confirmation Receipt</span>
-                        <span className="text-[#A5AAA3] text-[11px]">
-                          Inquiry ticket #{submittedPayload.inquiryId} addressed to {submittedPayload.email}.
-                        </span>
-                      </div>
-                    </div>
+                    <p className="text-[#A5AAA3] text-[11px] leading-relaxed">
+                      All your training preferences and inquiry message have been pre-filled. Simply press send in your email application to deliver it to our coaching desk.
+                    </p>
                   </div>
 
-                  {/* Summary Info Grid */}
-                  <div className="grid grid-cols-2 gap-2 p-3 rounded-lg bg-[#131614] border border-[#232723] text-xs">
+                  {/* Summary of Data */}
+                  <div className="grid grid-cols-2 gap-2.5 p-3.5 rounded-lg bg-[#131614] border border-[#232723] text-xs">
                     <div>
-                      <span className="text-[#A5AAA3] block text-[10px] uppercase">Selected Discipline</span>
+                      <span className="text-[#A5AAA3] block text-[10px] uppercase">Athlete Name</span>
+                      <span className="text-white font-medium">{submittedPayload.name}</span>
+                    </div>
+                    <div>
+                      <span className="text-[#A5AAA3] block text-[10px] uppercase">Discipline</span>
                       <span className="text-white font-medium">{submittedPayload.program}</span>
                     </div>
                     <div>
-                      <span className="text-[#A5AAA3] block text-[10px] uppercase">Callback Time</span>
+                      <span className="text-[#A5AAA3] block text-[10px] uppercase">Callback Window</span>
                       <span className="text-white font-medium">{submittedPayload.preferredTime.split(' ')[0]}</span>
                     </div>
                     <div>
                       <span className="text-[#A5AAA3] block text-[10px] uppercase">Phone</span>
-                      <span className="text-white font-medium">{submittedPayload.phone || 'N/A'}</span>
-                    </div>
-                    <div>
-                      <span className="text-[#A5AAA3] block text-[10px] uppercase">Status</span>
-                      <span className="text-[#C6FF3D] font-medium">Under Review</span>
+                      <span className="text-white font-medium">{submittedPayload.phone || 'Not provided'}</span>
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
+                  {/* Action Buttons: Reopen, Copy Text, Download Receipt */}
+                  <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
                     <a
                       href={createMailtoLink(submittedPayload)}
-                      className="flex-1 py-2.5 px-3 bg-[#C6FF3D] hover:bg-[#B5F527] text-[#0B0D0C] rounded-xl text-xs font-bold font-display uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors text-center"
+                      className="flex-1 py-3 px-3 bg-[#C6FF3D] hover:bg-[#B5F527] text-[#0B0D0C] rounded-xl text-xs font-bold font-display uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors text-center"
                     >
                       <Mail className="w-3.5 h-3.5" />
-                      <span>Send Direct Email Copy</span>
+                      <span>Re-open Email App</span>
                     </a>
 
                     <button
                       type="button"
-                      onClick={() => downloadInquiryReceipt(submittedPayload)}
-                      className="flex-1 py-2.5 px-3 bg-[#232723] hover:bg-[#2C322C] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/5"
+                      onClick={handleCopyText}
+                      className="flex-1 py-3 px-3 bg-[#232723] hover:bg-[#2C322C] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/5"
                     >
-                      <Download className="w-3.5 h-3.5 text-[#C6FF3D]" />
-                      <span>Download Receipt</span>
+                      {copied ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-[#C6FF3D]" />
+                          <span className="text-[#C6FF3D]">Copied to Clipboard!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5 text-[#C6FF3D]" />
+                          <span>Copy Message Text</span>
+                        </>
+                      )}
                     </button>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleResetForm}
-                    className="text-xs text-[#A5AAA3] hover:text-[#C6FF3D] pt-1 block mx-auto transition-colors"
-                  >
-                    ← Send another inquiry
-                  </button>
+                  <div className="flex items-center justify-between pt-2 border-t border-[#232723] text-xs text-[#A5AAA3]">
+                    <button
+                      type="button"
+                      onClick={() => downloadInquiryReceipt(submittedPayload)}
+                      className="text-[11px] hover:text-[#C6FF3D] flex items-center gap-1 transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download Receipt (.txt)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleResetForm}
+                      className="text-[11px] hover:text-[#C6FF3D] flex items-center gap-1 transition-colors"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>New Inquiry</span>
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleContactSubmit} className="space-y-3.5">
@@ -365,7 +357,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
                     {/* Phone Number */}
                     <div>
                       <label className="block text-xs uppercase tracking-wider text-[#A5AAA3] mb-1 font-semibold">
-                        Phone Number
+                        Phone Number <span className="text-[#A5AAA3]/60 font-normal">(Optional)</span>
                       </label>
                       <input
                         type="tel"
@@ -413,7 +405,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
                           key={slot}
                           type="button"
                           onClick={() => setPreferredTime(slot)}
-                          className={`py-2 px-2 text-[11px] rounded-lg border text-center transition-all ${
+                          className={`py-2 px-2 text-[11px] rounded-lg border text-center transition-all cursor-pointer ${
                             preferredTime === slot
                               ? 'border-[#C6FF3D] bg-[#C6FF3D]/10 text-[#C6FF3D] font-semibold'
                               : 'border-[#232723] bg-[#0B0D0C] text-[#A5AAA3] hover:text-white'
@@ -428,7 +420,7 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
                   {/* Message */}
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-[#A5AAA3] mb-1 font-semibold">
-                      Message / Goals <span className="text-[#C6FF3D]">*</span>
+                      Inquiry Message & Fitness Goals <span className="text-[#C6FF3D]">*</span>
                     </label>
                     <textarea
                       rows={3}
@@ -447,25 +439,15 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3.5 px-5 rounded-xl bg-[#C6FF3D] hover:bg-[#B5F527] disabled:opacity-50 text-[#0B0D0C] font-bold font-display uppercase tracking-wider text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md shadow-[#C6FF3D]/15"
+                    className="w-full py-3.5 px-5 rounded-xl bg-[#C6FF3D] hover:bg-[#B5F527] text-[#0B0D0C] font-bold font-display uppercase tracking-wider text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md shadow-[#C6FF3D]/15"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Dispatching Inquiry...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Submit Inquiry</span>
-                        <Send className="w-4 h-4" />
-                      </>
-                    )}
+                    <span>Send Inquiry via Email</span>
+                    <Send className="w-4 h-4" />
                   </button>
 
                   <div className="flex items-center justify-between text-[11px] text-[#A5AAA3]/70 pt-1">
-                    <span>Replies within 4 business hours</span>
-                    <span>Direct: {GYM_OWNER_EMAIL}</span>
+                    <span>Direct Mailto: {GYM_OWNER_EMAIL}</span>
+                    <span>No Third-Party APIs Needed</span>
                   </div>
                 </form>
               )}
@@ -582,82 +564,6 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
         </div>
       </footer>
 
-      {/* Web3Forms Access Key Setup Modal */}
-      {isKeyModalOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md bg-[#131614] border border-[#232723] rounded-2xl p-6 text-[#F5F5F0] shadow-2xl space-y-4"
-          >
-            <div className="flex items-center justify-between border-b border-[#232723] pb-3">
-              <div className="flex items-center gap-2">
-                <Key className="w-4 h-4 text-[#C6FF3D]" />
-                <h3 className="font-display uppercase font-bold text-base text-white">
-                  Live Email Delivery Setup
-                </h3>
-              </div>
-              <button
-                onClick={() => setIsKeyModalOpen(false)}
-                className="text-[#A5AAA3] hover:text-white text-xs"
-              >
-                Close
-              </button>
-            </div>
-
-            <p className="text-xs text-[#A5AAA3] leading-relaxed">
-              VOLT ATHLETICS supports instant email forwarding via <a href="https://web3forms.com" target="_blank" rel="noreferrer" className="text-[#C6FF3D] underline">Web3Forms</a>. Enter your free access key below to route all submissions directly to your email inbox:
-            </p>
-
-            <form onSubmit={handleSaveKey} className="space-y-3">
-              <div>
-                <label className="block text-[11px] uppercase tracking-wider text-[#A5AAA3] mb-1 font-semibold">
-                  Web3Forms Access Key
-                </label>
-                <input
-                  type="text"
-                  value={customKey}
-                  onChange={(e) => setCustomKey(e.target.value)}
-                  placeholder="e.g. 12345678-abcd-efgh-ijkl-1234567890ab"
-                  className="w-full px-3 py-2 bg-[#0B0D0C] border border-[#232723] rounded-xl text-xs text-white focus:outline-none focus:border-[#C6FF3D]"
-                />
-              </div>
-
-              {keySaved && (
-                <div className="p-2 rounded-lg bg-[#C6FF3D]/10 text-[#C6FF3D] text-xs flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Key saved to browser! Form will now dispatch live emails.</span>
-                </div>
-              )}
-
-              <div className="pt-2 flex gap-2">
-                <button
-                  type="submit"
-                  className="flex-1 py-2.5 px-4 bg-[#C6FF3D] hover:bg-[#B5F527] text-[#0B0D0C] font-bold text-xs uppercase tracking-wider rounded-xl transition-colors"
-                >
-                  Save Access Key
-                </button>
-                <a
-                  href="https://web3forms.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="py-2.5 px-4 bg-[#232723] hover:bg-[#2F352F] text-white text-xs font-semibold rounded-xl transition-colors flex items-center gap-1"
-                >
-                  <span>Get Free Key</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              </div>
-              <p className="text-[10px] text-[#A5AAA3]/70">
-                You can also set <code className="text-white">VITE_WEB3FORMS_ACCESS_KEY</code> in your Vercel Environment Variables.
-              </p>
-            </form>
-          </div>
-        </div>
-      )}
-
       {/* Privacy Policy & Terms Modal */}
       {legalModal && (
         <div
@@ -676,17 +582,17 @@ export const ContactFooter: React.FC<ContactFooterProps> = ({ onOpenTrial }) => 
               </h3>
               <button
                 onClick={() => setLegalModal(null)}
-                className="text-[#A5AAA3] hover:text-white"
+                className="text-[#A5AAA3] hover:text-white text-xs"
               >
                 Close
               </button>
             </div>
             <div className="text-xs text-[#A5AAA3] leading-relaxed max-h-60 overflow-y-auto space-y-2">
               <p>
-                <strong>1. Demonstration & Privacy Policy:</strong> VOLT ATHLETICS handles submitted member inquiries with confidentiality. Inquiry data is routed directly to the designated gym coaching concierge and not shared with external advertising networks.
+                <strong>1. Direct Email Dispatch:</strong> Inquiries are sent directly through your email application via native mailto protocol addressed to {GYM_OWNER_EMAIL}. No third-party data tracking or harvesting is performed.
               </p>
               <p>
-                <strong>2. Auto-Response & Communications:</strong> By submitting an inquiry, athletes agree to receive a confirmation email with preparation guidelines and direct communication from certified coaching staff.
+                <strong>2. Communications:</strong> By sending an email inquiry, athletes establish direct communication with the VOLT coaching desk.
               </p>
               <p>
                 <strong>3. Facility Rules:</strong> Member health and safety is paramount. All athletes agree to follow standard gym etiquette, rack weights, wipe equipment down, and follow coach instructions.
